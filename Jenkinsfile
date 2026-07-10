@@ -38,7 +38,7 @@ pipeline {
 
     stage('Build Image') {
       steps {
-        sh 'docker build -f "$HOST_WORKSPACE/docker/Dockerfile" -t "$IMAGE_NAME" "$HOST_WORKSPACE"'
+        sh 'docker build -f docker/Dockerfile -t "$IMAGE_NAME" .'
       }
     }
 
