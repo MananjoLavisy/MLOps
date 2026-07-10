@@ -22,7 +22,7 @@ pipeline {
           -v "$HOST_WORKSPACE":/workspace \
           -w /workspace \
           python:3.12-slim \
-          sh -lc "pip install -r requirements.txt && python -m flake8 src tests && python -m black --check src tests"'''
+          sh -lc "pip install -r requirements.txt -r requirements-dev.txt && python -m flake8 src tests && python -m black --check src tests"'''
       }
     }
 
@@ -32,7 +32,7 @@ pipeline {
           -v "$HOST_WORKSPACE":/workspace \
           -w /workspace \
           python:3.12-slim \
-          sh -lc "pip install -r requirements.txt && python -m pytest"'''
+          sh -lc "pip install -r requirements.txt -r requirements-dev.txt && python -m pytest"'''
       }
     }
 
