@@ -17,15 +17,13 @@ pipeline {
 
     stage('Lint') {
       steps {
-        sh 'python3 -m pip install --user -r requirements.txt'
-        sh 'python3 -m flake8 src tests'
-        sh 'python3 -m black --check src tests'
+        sh 'docker run --rm -v "$PWD":/workspace -w /workspace python:3.11-slim sh -c "pip install -r requirements.txt && python -m flake8 src tests && python -m black --check src tests"'
       }
     }
 
     stage('Test') {
       steps {
-        sh 'python3 -m pytest'
+        sh 'docker run --rm -v "$PWD":/workspace -w /workspace python:3.11-slim sh -c "pip install -r requirements.txt && python -m pytest"'
       }
     }
 
@@ -52,18 +50,45 @@ pipeline {
       }
     }
 
-    stage('Deploy Staging') {
+    stage('Deploy Dev') {
+      when {
+        branch 'dev'
+      }
+      steps {
+        withCredentials([
+          usernamePassword(credentialsId: 'dockerhub-account', usernameVariable: 'DOCKER_REGISTRY_USERNAME', passwordVariable: 'DOCKER_REGISTRY_PASSWORD'),
+          sshUserPrivateKey(credentialsId: 'dev-ssh-key', keyFileVariable: 'SSH_KEY')
+        ]) {
+          sh 'docker run --rm -v "$PWD":/workspace -w /workspace -v "$SSH_KEY":/tmp/staging_key python:3.11-slim sh -c "pip install ansible && ansible-galaxy collection install -r ansible/requirements.yml && ansible-playbook -i ansible/inventories/dev/hosts.ini ansible/playbooks/deploy.yml --private-key /tmp/staging_key -e image_name=\"$IMAGE_NAME\" -e docker_registry=\"$DOCKER_REGISTRY\" -e docker_registry_username=\"$DOCKER_REGISTRY_USERNAME\" -e docker_registry_password=\"$DOCKER_REGISTRY_PASSWORD\""'
+        }
+      }
+    }
+
+    stage('Deploy Preprod') {
       when {
         branch 'main'
       }
       steps {
-        sh 'python3 -m pip install --user ansible'
         withCredentials([
           usernamePassword(credentialsId: 'dockerhub-account', usernameVariable: 'DOCKER_REGISTRY_USERNAME', passwordVariable: 'DOCKER_REGISTRY_PASSWORD'),
-          sshUserPrivateKey(credentialsId: 'staging-ssh-key', keyFileVariable: 'SSH_KEY')
+          sshUserPrivateKey(credentialsId: 'preprod-ssh-key', keyFileVariable: 'SSH_KEY')
         ]) {
-          sh 'ansible-galaxy collection install -r ansible/requirements.yml'
-          sh 'ansible-playbook -i ansible/inventories/staging/hosts.ini ansible/playbooks/deploy.yml --private-key "$SSH_KEY" -e image_name="$IMAGE_NAME" -e docker_registry="$DOCKER_REGISTRY" -e docker_registry_username="$DOCKER_REGISTRY_USERNAME" -e docker_registry_password="$DOCKER_REGISTRY_PASSWORD"'
+          sh 'docker run --rm -v "$PWD":/workspace -w /workspace -v "$SSH_KEY":/tmp/staging_key python:3.11-slim sh -c "pip install ansible && ansible-galaxy collection install -r ansible/requirements.yml && ansible-playbook -i ansible/inventories/preprod/hosts.ini ansible/playbooks/deploy.yml --private-key /tmp/staging_key -e image_name=\"$IMAGE_NAME\" -e docker_registry=\"$DOCKER_REGISTRY\" -e docker_registry_username=\"$DOCKER_REGISTRY_USERNAME\" -e docker_registry_password=\"$DOCKER_REGISTRY_PASSWORD\""'
+        }
+      }
+    }
+
+    stage('Deploy Prod') {
+      when {
+        buildingTag()
+      }
+      steps {
+        input 'Deploy to production?'
+        withCredentials([
+          usernamePassword(credentialsId: 'dockerhub-account', usernameVariable: 'DOCKER_REGISTRY_USERNAME', passwordVariable: 'DOCKER_REGISTRY_PASSWORD'),
+          sshUserPrivateKey(credentialsId: 'prod-ssh-key', keyFileVariable: 'SSH_KEY')
+        ]) {
+          sh 'docker run --rm -v "$PWD":/workspace -w /workspace -v "$SSH_KEY":/tmp/staging_key python:3.11-slim sh -c "pip install ansible && ansible-galaxy collection install -r ansible/requirements.yml && ansible-playbook -i ansible/inventories/production/hosts.ini ansible/playbooks/deploy.yml --private-key /tmp/staging_key -e image_name=\"$IMAGE_NAME\" -e docker_registry=\"$DOCKER_REGISTRY\" -e docker_registry_username=\"$DOCKER_REGISTRY_USERNAME\" -e docker_registry_password=\"$DOCKER_REGISTRY_PASSWORD\""'
         }
       }
     }
