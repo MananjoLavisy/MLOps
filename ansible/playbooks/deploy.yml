@@ -1,0 +1,5 @@
+- name: Deploy MLOps application
+  hosts: all
+  become: true
+  roles:
+    - app_deploy

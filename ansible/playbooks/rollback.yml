@@ -1,0 +1,7 @@
+- name: Roll back MLOps application
+  hosts: all
+  become: true
+  vars:
+    image_name: "{{ rollback_image_name }}"
+  roles:
+    - app_deploy

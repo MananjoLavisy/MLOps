@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MLOps Project - Next Steps</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #0f172a;
+      --card: #111827;
+      --muted: #94a3b8;
+      --text: #e5e7eb;
+      --accent: #22c55e;
+      --border: #334155;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.18);
+      color: #bbf7d0;
+      font-size: 12px;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    button {
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: #1e293b;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+
+    code, pre {
+      font-family: Consolas, monospace;
+    }
+
+    pre {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      overflow-x: auto;
+    }
+
+    details {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 10px;
+      background: rgba(15, 23, 42, 0.55);
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>MLOps Project: Next Steps</h1>
+      <p class="muted">Version simple pour reprendre le projet rapidement.</p>
+      <span class="badge">Dataset present</span>
+      <span class="badge">Code ready</span>
+      <span class="badge">Tests passed before</span>
+      <span class="badge">WSL on D</span>
+    </div>
+
+    <div class="button-row">
+      <button id="open-all" type="button">Tout ouvrir</button>
+      <button id="close-all" type="button">Tout fermer</button>
+    </div>
+
+    <div class="card">
+      <h2>Ou on en est</h2>
+      <ul>
+        <li>Le projet est dans <code>/mnt/d/ws/MLOps</code>.</li>
+        <li>Le dataset est present dans <code>data/Crop_recommendation.csv</code>.</li>
+        <li>Le code principal est dans <code>src/</code>.</li>
+        <li>Les tests sont dans <code>tests/</code>.</li>
+        <li>La structure Docker, GitLab CI, Jenkins et Ansible existe deja.</li>
+        <li>Le but ML actuel est la recommandation de culture agricole.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Dossiers importants</h2>
+      <ul>
+        <li><code>src/</code> : code Python de train, prediction, API</li>
+        <li><code>tests/</code> : tests unitaires et API</li>
+        <li><code>data/</code> : dataset CSV</li>
+        <li><code>docker/</code> : Dockerfile</li>
+        <li><code>ansible/</code> : deploiement infra</li>
+        <li><code>docs/</code> : documents de suivi</li>
+        <li><code>monitoring/</code> : Prometheus/Grafana</li>
+      </ul>
+      <details>
+        <summary>Plus de details</summary>
+        <p>Fichiers importants deja presents :</p>
+        <ul>
+          <li><code>src/train.py</code></li>
+          <li><code>src/app.py</code></li>
+          <li><code>src/predict.py</code></li>
+          <li><code>src/model_artifacts.py</code></li>
+          <li><code>docker-compose.yml</code></li>
+          <li><code>.gitlab-ci.yml</code></li>
+          <li><code>Jenkinsfile</code></li>
+          <li><code>docs/PROJECT_CHECKPOINT.md</code></li>
+        </ul>
+      </details>
+    </div>
+
+    <div class="card">
+      <h2>Steps tres simples a faire</h2>
+      <ol>
+        <li>Verifier Python et le venv</li>
+        <li>Entrainer le modele localement</li>
+        <li>Tester l'API localement</li>
+        <li>Verifier Docker dans WSL</li>
+        <li>Lancer Docker localement</li>
+        <li>Configurer les vraies valeurs infra plus tard</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>Step 1: verifier l'environnement</h2>
+      <pre><code>cd /mnt/d/ws/MLOps
+source .venv/bin/activate
+python --version
+pytest</code></pre>
+      <details>
+        <summary>Plus de details</summary>
+        <p>But : verifier que l'environnement Python du projet est encore bon.</p>
+      </details>
+    </div>
+
+    <div class="card">
+      <h2>Step 2: entrainer le modele</h2>
+      <pre><code>cd /mnt/d/ws/MLOps
+source .venv/bin/activate
+python -m src.train</code></pre>
+      <details>
+        <summary>Plus de details</summary>
+        <p>Ca doit generer :</p>
+        <ul>
+          <li><code>models/model.joblib</code></li>
+          <li><code>models/model.json</code></li>
+        </ul>
+      </details>
+    </div>
+
+    <div class="card">
+      <h2>Step 3: lancer l'API localement</h2>
+      <pre><code>cd /mnt/d/ws/MLOps
+source .venv/bin/activate
+uvicorn src.app:app --host 0.0.0.0 --port 8000</code></pre>
+      <details>
+        <summary>Plus de details</summary>
+        <p>Dans un autre terminal :</p>
+        <pre><code>curl http://127.0.0.1:8000/health
+curl http://127.0.0.1:8000/model-info</code></pre>
+      </details>
+    </div>
+
+    <div class="card">
+      <h2>Step 4: verifier Docker</h2>
+      <pre><code>docker version
+docker compose version</code></pre>
+      <details>
+        <summary>Plus de details</summary>
+        <p>Si ca ne marche pas, il faut reconnecter Docker Desktop a <code>Ubuntu-D-test</code> dans WSL integration.</p>
+      </details>
+    </div>
+
+    <div class="card">
+      <h2>Step 5: lancer en Docker</h2>
+      <pre><code>cp .env.example .env
+docker build -f docker/Dockerfile -t mlops-fastapi:local .
+docker compose up --build -d
+docker compose ps</code></pre>
+      <details>
+        <summary>Plus de details</summary>
+        <p>Puis tester :</p>
+        <pre><code>curl http://127.0.0.1:8000/health</code></pre>
+      </details>
+    </div>
+
+    <div class="card">
+      <h2>Step 6: plus tard pour l'infra</h2>
+      <ul>
+        <li>remplir les vraies IP dans <code>ansible/inventories/</code></li>
+        <li>installer/configurer GitLab CE</li>
+        <li>installer/configurer Harbor</li>
+        <li>tester Ansible</li>
+        <li>deployer en staging</li>
+      </ul>
+      <details>
+        <summary>Plus de details</summary>
+        <p>Cette partie vient apres validation locale complete.</p>
+      </details>
+    </div>
+
+    <div class="card">
+      <h2>Le prochain vrai point de blocage probable</h2>
+      <p>Le code du projet est pret a avancer. Le point a verifier maintenant est surtout Docker dans la distro WSL <code>Ubuntu-D-test</code>.</p>
+    </div>
+  </div>
+
+  <script>
+    const details = Array.from(document.querySelectorAll('details'));
+    document.getElementById('open-all').addEventListener('click', () => {
+      details.forEach((item) => {
+        item.open = true;
+      });
+    });
+    document.getElementById('close-all').addEventListener('click', () => {
+      details.forEach((item) => {
+        item.open = false;
+      });
+    });
+  </script>
+</body>
+</html>

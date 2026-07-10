@@ -1,0 +1,26 @@
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install base packages
+  ansible.builtin.apt:
+    name:
+      - ca-certificates
+      - curl
+      - gnupg
+      - python3-pip
+    state: present
+
+- name: Create deploy group
+  ansible.builtin.group:
+    name: deploy
+    state: present
+
+- name: Create deploy user
+  ansible.builtin.user:
+    name: deploy
+    group: deploy
+    create_home: true
+    shell: /bin/bash
+    state: present

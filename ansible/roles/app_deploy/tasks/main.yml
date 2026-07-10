@@ -1,0 +1,53 @@
+- name: Ensure deployment directory exists
+  ansible.builtin.file:
+    path: "{{ deploy_path }}"
+    state: directory
+    owner: deploy
+    group: deploy
+    mode: "0755"
+
+- name: Ensure model directory exists
+  ansible.builtin.file:
+    path: "{{ deploy_path }}/models"
+    state: directory
+    owner: deploy
+    group: deploy
+    mode: "0755"
+
+- name: Render environment file
+  ansible.builtin.template:
+    src: env.j2
+    dest: "{{ deploy_path }}/.env"
+    owner: deploy
+    group: deploy
+    mode: "0640"
+
+- name: Render Docker Compose file
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ deploy_path }}/docker-compose.yml"
+    owner: deploy
+    group: deploy
+    mode: "0644"
+
+- name: Login to Docker registry
+  community.docker.docker_login:
+    registry_url: "{{ docker_registry }}"
+    username: "{{ docker_registry_username }}"
+    password: "{{ docker_registry_password }}"
+
+- name: Deploy application with Docker Compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ deploy_path }}"
+    pull: always
+    state: present
+
+- name: Wait for API healthcheck
+  ansible.builtin.uri:
+    url: "{{ healthcheck_url }}"
+    method: GET
+    status_code: 200
+  register: healthcheck_result
+  retries: 10
+  delay: 5
+  until: healthcheck_result.status == 200

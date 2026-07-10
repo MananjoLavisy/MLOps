@@ -1,0 +1,14 @@
+services:
+  api:
+    image: ${IMAGE_NAME:-mlops-fastapi:local}
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: mlops-fastapi
+    env_file:
+      - .env
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    volumes:
+      - ./models:/app/models
+    restart: unless-stopped

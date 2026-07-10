@@ -1,0 +1,6 @@
+- name: Prepare deployment hosts
+  hosts: all
+  become: true
+  roles:
+    - common
+    - docker

@@ -1,0 +1,7 @@
+- name: Ensure monitoring directory exists
+  ansible.builtin.file:
+    path: "{{ deploy_path }}/monitoring"
+    state: directory
+    owner: deploy
+    group: deploy
+    mode: "0755"
