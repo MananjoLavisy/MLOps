@@ -17,15 +17,20 @@ pipeline {
 
     stage('Lint') {
       steps {
-        sh 'python3 -m pip install --user -r requirements.txt'
-        sh 'python3 -m flake8 src tests'
-        sh 'python3 -m black --check src tests'
+        sh '''python3 -m venv .jenkins-venv
+          . .jenkins-venv/bin/activate
+          pip install -r requirements.txt
+          python -m flake8 src tests
+          python -m black --check src tests'''
       }
     }
 
     stage('Test') {
       steps {
-        sh 'python3 -m pytest'
+        sh '''python3 -m venv .jenkins-venv
+          . .jenkins-venv/bin/activate
+          pip install -r requirements.txt
+          python -m pytest'''
       }
     }
 
