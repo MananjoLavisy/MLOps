@@ -17,13 +17,15 @@ pipeline {
 
     stage('Lint') {
       steps {
-        sh '''docker run --rm -v "$PWD":/workspace -w /workspace python:3.11-slim sh -lc "pip install -r requirements.txt && python -m flake8 src tests && python -m black --check src tests"'''
+        sh 'python3 -m pip install --user -r requirements.txt'
+        sh 'python3 -m flake8 src tests'
+        sh 'python3 -m black --check src tests'
       }
     }
 
     stage('Test') {
       steps {
-        sh '''docker run --rm -v "$PWD":/workspace -w /workspace python:3.11-slim sh -lc "pip install -r requirements.txt && python -m pytest"'''
+        sh 'python3 -m pytest'
       }
     }
 
