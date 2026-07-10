@@ -1,5 +1,10 @@
 pipeline {
-  agent any
+  agent {
+    node {
+      label ''
+      customWorkspace '/mnt/d/ws/MLOps'
+    }
+  }
 
   environment {
     DOCKER_REGISTRY = 'docker.io'
