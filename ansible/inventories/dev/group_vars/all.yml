@@ -1,0 +1,7 @@
+deploy_path: /opt/mlops-dev
+app_port: 8001
+model_path: models/model.joblib
+compose_project_name: mlops-dev
+image_name: mananjolavisy2/mlops-fastapi:dev
+docker_registry: docker.io
+healthcheck_url: http://127.0.0.1:8001/health

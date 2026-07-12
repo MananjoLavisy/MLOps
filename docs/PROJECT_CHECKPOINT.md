@@ -83,10 +83,11 @@ Current ML use case:
 - Jenkins pipeline is the primary CI/CD target
 - GitLab CI remains secondary/reference only
 - local Jenkins compose file exists for easy startup
+- Jenkins logic now follows `dev -> dev`, `main -> preprod`, `tag -> prod`
 
 ## Infra automation
 
-- inventories exist for `staging` and `production`
+- inventories exist for `dev`, `preprod` and `production`
 - basic roles exist for `common`, `docker`, `app_deploy`, `monitoring`
 - Harbor login and compose deploy are modeled in Ansible
 
